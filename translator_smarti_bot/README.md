@@ -14,11 +14,11 @@ The workflow validates the input data before processing and returns the translat
 
 ## Workflow Preview
 
-![Workflow](/photo_2026-05-20_10-11-34.jpg)
+![Workflow](/translator_smarti_bot/image.png)
 
 ## Demo
 
-![Demo](/photo_2026-05-20_10-11-34.jpg)
+![Demo](/translator_smarti_bot/photo_2026-05-20_10-11-34.jpg)
 
 ## Features
 
