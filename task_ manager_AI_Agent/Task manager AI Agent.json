@@ -1,0 +1,515 @@
+{
+  "name": "Task manager AI Agent",
+  "nodes": [
+    {
+      "parameters": {
+        "promptType": "define",
+        "text": "={{ $('Telegram Trigger').first().json.message.text }}",
+        "options": {
+          "systemMessage": "Ти Task Manager AI Agent. Твоє завдання це допомагати користувачу керувати списком завдань.\nТи маєш підтримувати такі дії:\n1.Отримання списку завдань\nЯкщо користувач питає щось типу:\n\"які є задачі?\"\n\"покажи завдання\"\n\"мій список задач\"\nти повинен викликати інструмент отримання списку завдань - Get tasks.\n2.Додавання нового завдання\nЯкщо користувач пише:\n\"додай завдання купити молоко\"\n\"створи задачу зробити домашку\"\n👉 ти повинен:\nвитягнути текст завдання, передати текст задачі та\nвикликати інструмент створення задачі - Add task.\n3. Позначення завдання як виконаного\nЯкщо користувач пише що завдання виконано:\n👉 ти повинен:\n- Спочатку викликати Get tasks щоб отримати список з id\n- Знайти відповідне завдання за текстом\n- Викликати Done task, передавши:\n  - id: (числовий id знайденого завдання)\n  - done: true\n\nПравила роботи:\nЗавжди визначай намір користувача (отримати / створити / завершити)\nЯкщо не вистачає даних — уточни\nВідповідай коротко і зрозуміло\nНе вигадуй задачі — працюй тільки з інструментами"
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.agent",
+      "typeVersion": 3.1,
+      "position": [
+        1232,
+        448
+      ],
+      "id": "4fbe9446-4808-4f40-a39a-4fd02e5e6e34",
+      "name": "AI Agent"
+    },
+    {
+      "parameters": {
+        "model": {
+          "__rl": true,
+          "mode": "list",
+          "value": "gpt-5-mini"
+        },
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.lmChatOpenAi",
+      "typeVersion": 1.3,
+      "position": [
+        1040,
+        672
+      ],
+      "id": "94a5e6e3-4ac8-4969-8aae-3f33921353dd",
+      "name": "OpenAI Chat Model",
+      "credentials": {
+        "openAiApi": {
+          "id": "aH87upAgZSJQBupE",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "description": "Call this tool that Пet tasks for user.",
+        "workflowId": {
+          "__rl": true,
+          "value": "0BI9Yr74vg7RiqNi",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/0BI9Yr74vg7RiqNi",
+          "cachedResultName": "Get tasks"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        1296,
+        672
+      ],
+      "id": "248df3c8-d7f4-4e75-afba-48bb98b101a9",
+      "name": "Call 'Get tasks'"
+    },
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        368,
+        48
+      ],
+      "id": "485da225-ecc0-4204-bb1e-b7716fd464cc",
+      "name": "Telegram Trigger",
+      "webhookId": "a1850c67-e07a-4827-9681-c4ad140d49ea",
+      "credentials": {
+        "telegramApi": {
+          "id": "IljTqNxwoV8NVw8j",
+          "name": "task_manager_mi_bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+        "text": "={{ $json.output }}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        1760,
+        144
+      ],
+      "id": "8e29a9bc-50c8-48fc-ae08-270af5c31dd3",
+      "name": "Send a text message",
+      "webhookId": "d6859b0b-51e4-48cf-b402-a836cc2b71ec",
+      "credentials": {
+        "telegramApi": {
+          "id": "IljTqNxwoV8NVw8j",
+          "name": "task_manager_mi_bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message }}",
+                    "rightValue": "/start",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "88d89e22-21e8-44a3-821c-ea35c388f832"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "bd3cde85-0927-45e5-98de-8f3f007b1d11",
+                    "leftValue": "={{ $json.message }}",
+                    "rightValue": "/help",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true
+            }
+          ]
+        },
+        "options": {
+          "fallbackOutput": "extra"
+        }
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        816,
+        32
+      ],
+      "id": "ac6c1d15-7d21-4b7d-899d-84204e62197b",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "9a4711be-c4c2-42b9-b89f-087a024870ce",
+              "name": "output",
+              "value": "🤖 Довідка (help)  Я — Task Manager AI Agent і можу допомогти тобі з керуванням завданнями.  Ось що я вмію:  📋 Показати список завдань Напиши:  \"які є задачі?\" \"покажи всі завдання\"  📝 Додати нове завдання Напиши:  \"додай завдання купити молоко\" \"створи задачу зробити домашку\"  ✅ Позначити завдання як виконане Напиши:  \"я купив молоко, познач як виконано\" \"завдання зроблено\"  ℹ️ Порада: пиши просто своїми словами — я зрозумію 🙂  Готовий працювати 🚀",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1296,
+        144
+      ],
+      "id": "699eb2f3-a34e-4773-80d5-41a576966c96",
+      "name": "Text help"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "41055283-c8fb-4cf8-a9c5-65a750f3441b",
+              "name": "output",
+              "value": "Привіт! 👋 Я — твій AI Task Manager.  Я допоможу тобі керувати завданнями:  📝 Додавати нові задачі 📋 Показувати список задач ✅ Позначати виконані  Просто напиши, що потрібно, наприклад:  \"Додай завдання купити молоко\" \"Які в мене задачі?\" \"Я зробив це, познач як виконано\"  Готовий допомогти 🚀",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1296,
+        -48
+      ],
+      "id": "5173d2e9-3657-4fcf-b872-207832f9efc0",
+      "name": "Text start"
+    },
+    {
+      "parameters": {
+        "description": "Call this tool that Add task from user to data table",
+        "workflowId": {
+          "__rl": true,
+          "value": "UkzTp3bemWgaK7jO",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/UkzTp3bemWgaK7jO",
+          "cachedResultName": "Add task"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "task": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('task', ``, 'string') }}"
+          },
+          "matchingColumns": [
+            "task"
+          ],
+          "schema": [
+            {
+              "id": "task",
+              "displayName": "task",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "string",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        1424,
+        672
+      ],
+      "id": "72937531-649b-456e-87dc-dc07500079d0",
+      "name": "Call 'Add task'"
+    },
+    {
+      "parameters": {
+        "sessionIdType": "customKey",
+        "sessionKey": "={{ $('Telegram Trigger').first().json.message.chat.id }}"
+      },
+      "type": "@n8n/n8n-nodes-langchain.memoryBufferWindow",
+      "typeVersion": 1.3,
+      "position": [
+        1168,
+        672
+      ],
+      "id": "a357b6a2-da58-4a39-a682-41ec8ba78d31",
+      "name": "Simple Memory"
+    },
+    {
+      "parameters": {
+        "description": "Call this tool done task that  task will notice that it is done",
+        "workflowId": {
+          "__rl": true,
+          "value": "o3NysWRDLna3D0ev",
+          "mode": "list",
+          "cachedResultUrl": "/workflow/o3NysWRDLna3D0ev",
+          "cachedResultName": "Done task"
+        },
+        "workflowInputs": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "id": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('id', ``, 'number') }}",
+            "done": "={{ /*n8n-auto-generated-fromAI-override*/ $fromAI('done', ``, 'string') }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "done",
+              "displayName": "done",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "boolean",
+              "removed": false
+            },
+            {
+              "id": "id",
+              "displayName": "id",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "canBeUsedToMatch": true,
+              "type": "number",
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        }
+      },
+      "type": "@n8n/n8n-nodes-langchain.toolWorkflow",
+      "typeVersion": 2.2,
+      "position": [
+        1552,
+        672
+      ],
+      "id": "82f5c71a-5b5d-4d74-a902-59b6cc2bf39f",
+      "name": "Call 'Done task'"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "c65d88b4-222b-4599-8fa9-7d3aa5b7427a",
+              "name": "message",
+              "value": "={{ $json.message.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        592,
+        48
+      ],
+      "id": "8f094882-e8b2-4a57-b5c0-ccd20c2e403a",
+      "name": "Take a message"
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "OpenAI Chat Model": {
+      "ai_languageModel": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_languageModel",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'Get tasks'": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Take a message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "AI Agent": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Text start",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Text help",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "AI Agent",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text help": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text start": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'Add task'": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Simple Memory": {
+      "ai_memory": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_memory",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Call 'Done task'": {
+      "ai_tool": [
+        [
+          {
+            "node": "AI Agent",
+            "type": "ai_tool",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Take a message": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "a213e55c-41a3-4892-ba9d-006697e64d77",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "81473fd982cc26566df7414990cc4a8d275b553de1512546ed1b7f8740645aa0"
+  },
+  "id": "mcTbSFXmObmbkBcC",
+  "tags": []
+}

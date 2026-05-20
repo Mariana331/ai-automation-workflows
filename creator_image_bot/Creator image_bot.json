@@ -1,0 +1,630 @@
+{
+  "name": "Creator image_bot",
+  "nodes": [
+    {
+      "parameters": {
+        "updates": [
+          "message"
+        ],
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegramTrigger",
+      "typeVersion": 1.2,
+      "position": [
+        0,
+        80
+      ],
+      "id": "aaa62bd2-567a-4049-b74a-5fd0d8b8642d",
+      "name": "Telegram Trigger",
+      "webhookId": "77fdf0d5-fcbf-48ea-b0bf-5afa6aed3c91",
+      "credentials": {
+        "telegramApi": {
+          "id": "uwxnmUF4cNfvtKyb",
+          "name": "Creator image_bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "rules": {
+          "values": [
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/start",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    },
+                    "id": "d08a9935-bcb8-4113-811f-7b6cf01cac3d"
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "3060bd76-ceff-4ae1-8fbc-b8c9c7fd587b",
+                    "leftValue": "={{ $json.message.text }}",
+                    "rightValue": "/help",
+                    "operator": {
+                      "type": "string",
+                      "operation": "equals"
+                    }
+                  }
+                ],
+                "combinator": "and"
+              },
+              "renameOutput": true
+            },
+            {
+              "conditions": {
+                "options": {
+                  "caseSensitive": true,
+                  "leftValue": "",
+                  "typeValidation": "strict",
+                  "version": 3
+                },
+                "conditions": [
+                  {
+                    "id": "0782cccd-3d22-41e9-a661-9127558a86cf",
+                    "leftValue": "={{ $json.message.voice }}",
+                    "rightValue": "",
+                    "operator": {
+                      "type": "object",
+                      "operation": "notEmpty",
+                      "singleValue": true
+                    }
+                  }
+                ],
+                "combinator": "and"
+              }
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.switch",
+      "typeVersion": 3.4,
+      "position": [
+        224,
+        64
+      ],
+      "id": "596c9af4-94e9-48e6-96af-339a63db252c",
+      "name": "Switch"
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "fed4768c-c820-48e0-b81f-05655a80af1b",
+              "name": "output",
+              "value": "Привіт! 👋 Я — бот, який перетворює твої голосові повідомлення на зображення 🎨  Як це працює: 1️⃣ Надішли мені голосове повідомлення 🎤 2️⃣ Я перетворю його в текст 📝 3️⃣ А потім створю зображення за цим описом 🖼️  Спробуй прямо зараз — просто запиши голосове повідомлення! 🚀  Порада: Чим детальніше ти опишеш ідею голосом, тим цікавіше буде результат 😉",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        448,
+        -112
+      ],
+      "id": "b96ddd15-c81c-4fd5-ad31-d5f938efa3ac",
+      "name": "Text start"
+    },
+    {
+      "parameters": {
+        "chatId": "={{ $('Telegram Trigger').first().json.message.chat.id }}",
+        "text": "={{ $json.output}}",
+        "additionalFields": {
+          "appendAttribution": false
+        }
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        672,
+        -16
+      ],
+      "id": "7f048644-2bf1-47e4-89df-b72512eb7371",
+      "name": "Send a text message",
+      "webhookId": "5b2ea807-307c-497e-a236-36321125007c",
+      "credentials": {
+        "telegramApi": {
+          "id": "uwxnmUF4cNfvtKyb",
+          "name": "Creator image_bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "efcc5b1f-ee3c-410c-abf3-b460caec7fbd",
+              "name": "output",
+              "value": "❓ Допомога  Я допоможу тобі створювати зображення з голосових повідомлень 🎨  🔹 Як користуватися:  Надішли голосове повідомлення 🎤 Я перетворю його в текст 📝 Згенерую зображення за описом 🖼️  🔹 Рекомендації:  Говори чітко та розбірливо Описуй деталі (стиль, кольори, об'єкти, настрій) Уникай дуже коротких фраз  🔹 Приклад: \"Кіт у космосі в стилі аніме, яскраві кольори\"  🔹 Можливі проблеми:  Якщо голос нечіткий — результат може бути неточним Генерація може зайняти кілька секунд ⏳  Якщо щось не працює — просто спробуй ще раз або перефразуй запит 😊",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        448,
+        80
+      ],
+      "id": "ab28b881-5455-4abc-8e6f-3a03fdbdc020",
+      "name": "Text help"
+    },
+    {
+      "parameters": {
+        "resource": "file",
+        "fileId": "={{ $json.message.voice.file_id }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        448,
+        272
+      ],
+      "id": "38eea92b-400a-4327-b243-9c5f871c6006",
+      "name": "Get a file",
+      "webhookId": "a083a2c6-79c3-4028-997b-43388f347b6a",
+      "credentials": {
+        "telegramApi": {
+          "id": "uwxnmUF4cNfvtKyb",
+          "name": "Creator image_bot"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.assemblyai.com/v2/transcript",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "specifyBody": "json",
+        "jsonBody": "={\"audio_url\": \"{{ $json.upload_url }}\",\n\"speech_models\": [\"universal-2\"],\n\"speaker_labels\": true,\n\"language_code\": \"uk\"} ",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        896,
+        272
+      ],
+      "id": "d2963526-8203-4a17-86d7-0d8fdf6cf2d0",
+      "name": "POST in AssumblyAI",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "Mty0i7tYlqYfuP0a",
+          "name": "AssemblyAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "url": "=https://api.assemblyai.com/v2/transcript/{{ $json.id }}",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        1120,
+        272
+      ],
+      "id": "5f652c29-fab7-4e98-bcaa-3ad501bff60a",
+      "name": "Get transcript",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "Mty0i7tYlqYfuP0a",
+          "name": "AssemblyAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.assemblyai.com/v2/upload",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpHeaderAuth",
+        "sendBody": true,
+        "contentType": "binaryData",
+        "inputDataFieldName": "data",
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        672,
+        272
+      ],
+      "id": "0c792f2f-4f7a-4715-b095-ae58188cdc1b",
+      "name": "Upload url",
+      "credentials": {
+        "httpHeaderAuth": {
+          "id": "Mty0i7tYlqYfuP0a",
+          "name": "AssemblyAI"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "amount": 10
+      },
+      "type": "n8n-nodes-base.wait",
+      "typeVersion": 1.1,
+      "position": [
+        1568,
+        368
+      ],
+      "id": "3360b5e9-a063-4d50-a037-45372f77b78a",
+      "name": "Wait",
+      "webhookId": "17d1a1d8-d0de-461b-9271-0fe3572459ae"
+    },
+    {
+      "parameters": {
+        "modelId": {
+          "__rl": true,
+          "value": "gpt-5-mini",
+          "mode": "list",
+          "cachedResultName": "GPT-5-MINI"
+        },
+        "responses": {
+          "values": [
+            {
+              "content": "You are an expert AI image prompt engineer. The user provides a simple prompt for a DALL·E image. Your task is to improve it into a visually rich and creative image prompt while preserving the original idea.\n\nAdd concise details about lighting, colors, mood, composition, perspective, and style. Keep the result clear, cinematic, and optimized for AI image generation.\n\nIMPORTANT:\n- The final prompt must be no longer than 500 characters.\n- Return only the final prompt.\n- Do not include explanations, formatting, or extra text."
+            },
+            {
+              "content": "={{ $json.text }}"
+            }
+          ]
+        },
+        "simplify": false,
+        "builtInTools": {},
+        "options": {}
+      },
+      "type": "@n8n/n8n-nodes-langchain.openAi",
+      "typeVersion": 2.1,
+      "position": [
+        1792,
+        160
+      ],
+      "id": "7db1d50d-adef-40af-b777-060d1a1396fc",
+      "name": "Message a model",
+      "credentials": {
+        "openAiApi": {
+          "id": "aH87upAgZSJQBupE",
+          "name": "OpenAI account"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "method": "POST",
+        "url": "https://api.openai.com/v1/images/generations",
+        "authentication": "genericCredentialType",
+        "genericAuthType": "httpBearerAuth",
+        "sendBody": true,
+        "bodyParameters": {
+          "parameters": [
+            {
+              "name": "prompt",
+              "value": "={{ $json.output[1].content[0].text }}"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.httpRequest",
+      "typeVersion": 4.4,
+      "position": [
+        2144,
+        160
+      ],
+      "id": "d05d7614-8b2f-45cd-bef5-86b04479d15a",
+      "name": "Create image",
+      "credentials": {
+        "httpBearerAuth": {
+          "id": "qf3p14FhDK63XKgi",
+          "name": "OpenAI Bearer"
+        }
+      }
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "f0420a65-92e6-4870-b00d-91bf922f0783",
+              "name": "text",
+              "value": "={{ $json.text }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        1568,
+        160
+      ],
+      "id": "7d99188f-427e-4be5-9dee-9ac50c29038f",
+      "name": "Take a text from voice"
+    },
+    {
+      "parameters": {
+        "conditions": {
+          "options": {
+            "caseSensitive": true,
+            "leftValue": "",
+            "typeValidation": "strict",
+            "version": 3
+          },
+          "conditions": [
+            {
+              "id": "f37df5e3-b89b-43ac-8302-ef2adbca1fcb",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "completed",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            },
+            {
+              "id": "07c6ca1b-03e3-4525-820f-98f9cb532e0d",
+              "leftValue": "={{ $json.status }}",
+              "rightValue": "error",
+              "operator": {
+                "type": "string",
+                "operation": "equals"
+              }
+            }
+          ],
+          "combinator": "or"
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.if",
+      "typeVersion": 2.3,
+      "position": [
+        1344,
+        208
+      ],
+      "id": "42c83f53-00e3-4fa2-afd4-7a357b970438",
+      "name": "If completed or error"
+    },
+    {
+      "parameters": {
+        "operation": "sendPhoto",
+        "chatId": "={{ $('Telegram Trigger').item.json.message.chat.id }}",
+        "file": "={{ $json.data[0].url }}",
+        "additionalFields": {}
+      },
+      "type": "n8n-nodes-base.telegram",
+      "typeVersion": 1.2,
+      "position": [
+        2368,
+        160
+      ],
+      "id": "21d577c4-f93d-4fb1-8089-fd9168ace4e4",
+      "name": "Send a photo message",
+      "webhookId": "655045da-8bc1-406a-b27d-0f921f33e89e",
+      "credentials": {
+        "telegramApi": {
+          "id": "uwxnmUF4cNfvtKyb",
+          "name": "Creator image_bot"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Telegram Trigger": {
+      "main": [
+        [
+          {
+            "node": "Switch",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Switch": {
+      "main": [
+        [
+          {
+            "node": "Text start",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Text help",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Get a file",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text start": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Text help": {
+      "main": [
+        [
+          {
+            "node": "Send a text message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get a file": {
+      "main": [
+        [
+          {
+            "node": "Upload url",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "POST in AssumblyAI": {
+      "main": [
+        [
+          {
+            "node": "Get transcript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Upload url": {
+      "main": [
+        [
+          {
+            "node": "POST in AssumblyAI",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get transcript": {
+      "main": [
+        [
+          {
+            "node": "If completed or error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Wait": {
+      "main": [
+        [
+          {
+            "node": "Get transcript",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Message a model": {
+      "main": [
+        [
+          {
+            "node": "Create image",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Create image": {
+      "main": [
+        [
+          {
+            "node": "Send a photo message",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Take a text from voice": {
+      "main": [
+        [
+          {
+            "node": "Message a model",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "If completed or error": {
+      "main": [
+        [
+          {
+            "node": "Take a text from voice",
+            "type": "main",
+            "index": 0
+          }
+        ],
+        [
+          {
+            "node": "Wait",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "8c08c55f-9c80-407b-a2a2-d318a57441b4",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "81473fd982cc26566df7414990cc4a8d275b553de1512546ed1b7f8740645aa0"
+  },
+  "id": "mIJMi92A5wCv4tci",
+  "tags": []
+}

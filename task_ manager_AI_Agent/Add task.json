@@ -1,0 +1,108 @@
+{
+  "name": "Add task",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "task"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "0b695a74-722d-4a12-ae8a-aa6b3d21d030",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "dataTableId": {
+          "__rl": true,
+          "value": "2wcvkQKO1PwXyKuf",
+          "mode": "list",
+          "cachedResultName": "Tasks list",
+          "cachedResultUrl": "/projects/Yur42J7o9t6t4b5B/datatables/2wcvkQKO1PwXyKuf"
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "task": "={{ $json.task }}"
+          },
+          "matchingColumns": [
+            "task"
+          ],
+          "schema": [
+            {
+              "id": "task",
+              "displayName": "task",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": false
+            },
+            {
+              "id": "done",
+              "displayName": "done",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": true
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        256,
+        0
+      ],
+      "id": "db1fa0a9-8a9d-48fc-b78d-2f7647dd1110",
+      "name": "Insert task",
+      "alwaysOutputData": true
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Insert task",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Insert task": {
+      "main": [
+        []
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "41cdd62e-c948-44df-b608-84153e7e4922",
+  "meta": {
+    "instanceId": "81473fd982cc26566df7414990cc4a8d275b553de1512546ed1b7f8740645aa0"
+  },
+  "id": "UkzTp3bemWgaK7jO",
+  "tags": []
+}

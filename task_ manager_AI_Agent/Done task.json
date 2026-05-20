@@ -1,0 +1,157 @@
+{
+  "name": "Done task",
+  "nodes": [
+    {
+      "parameters": {
+        "workflowInputs": {
+          "values": [
+            {
+              "name": "done",
+              "type": "boolean"
+            },
+            {
+              "name": "id",
+              "type": "number"
+            }
+          ]
+        }
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "98805ea9-92ff-4f11-ae7b-2776e4d8aa8e",
+      "name": "When Executed by Another Workflow"
+    },
+    {
+      "parameters": {
+        "operation": "update",
+        "dataTableId": {
+          "__rl": true,
+          "value": "2wcvkQKO1PwXyKuf",
+          "mode": "list",
+          "cachedResultName": "Tasks list",
+          "cachedResultUrl": "/projects/Yur42J7o9t6t4b5B/datatables/2wcvkQKO1PwXyKuf"
+        },
+        "filters": {
+          "conditions": [
+            {
+              "keyValue": "={{ $json.id }}"
+            }
+          ]
+        },
+        "columns": {
+          "mappingMode": "defineBelow",
+          "value": {
+            "done": "={{ true }}"
+          },
+          "matchingColumns": [],
+          "schema": [
+            {
+              "id": "task",
+              "displayName": "task",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "string",
+              "readOnly": false,
+              "removed": true
+            },
+            {
+              "id": "done",
+              "displayName": "done",
+              "required": false,
+              "defaultMatch": false,
+              "display": true,
+              "type": "boolean",
+              "readOnly": false,
+              "removed": false
+            }
+          ],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "719ed974-dda9-486c-b5a8-47832967710f",
+      "name": "Update task row",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "26ec1fce-b9db-4958-8882-1f1eda9ba74d",
+              "name": "task",
+              "value": "={{ $json.done }}",
+              "type": "boolean"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        416,
+        0
+      ],
+      "id": "0595d5ec-f286-472d-9334-bebd86d182ce",
+      "name": "Edit Fields"
+    }
+  ],
+  "pinData": {
+    "When Executed by Another Workflow": [
+      {
+        "json": {
+          "done": true,
+          "id": 1
+        }
+      }
+    ]
+  },
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Update task row",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Update task row": {
+      "main": [
+        [
+          {
+            "node": "Edit Fields",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "f0dbb6b7-e74b-4928-8727-3b07a1b67885",
+  "meta": {
+    "instanceId": "81473fd982cc26566df7414990cc4a8d275b553de1512546ed1b7f8740645aa0"
+  },
+  "id": "o3NysWRDLna3D0ev",
+  "tags": []
+}

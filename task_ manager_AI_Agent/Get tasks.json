@@ -1,0 +1,126 @@
+{
+  "name": "Get tasks",
+  "nodes": [
+    {
+      "parameters": {
+        "assignments": {
+          "assignments": [
+            {
+              "id": "cfea2c53-355c-470f-88f1-7ce7f326c6e3",
+              "name": "task",
+              "value": "={{ $('Get all tasks').item.json.task }}",
+              "type": "string"
+            },
+            {
+              "id": "5d192d0a-a90d-40d6-99d8-b9a3aeb2e71b",
+              "name": "done",
+              "value": "={{ $('Get all tasks').item.json.done }}",
+              "type": "string"
+            },
+            {
+              "id": "18ec007e-541c-4316-a281-65aed9f00025",
+              "name": "id",
+              "value": "={{ $('Get all tasks').item.json.id }}",
+              "type": "number"
+            },
+            {
+              "id": "36cfe56e-26d4-490c-b864-938765633666",
+              "name": "createdAt",
+              "value": "={{ $('Get all tasks').item.json.createdAt }}",
+              "type": "string"
+            },
+            {
+              "id": "c661ee3e-a3f3-4ea4-ade4-6ffc98f0d563",
+              "name": "updatedAt",
+              "value": "={{ $('Get all tasks').item.json.updatedAt }}",
+              "type": "string"
+            }
+          ]
+        },
+        "options": {}
+      },
+      "type": "n8n-nodes-base.set",
+      "typeVersion": 3.4,
+      "position": [
+        544,
+        0
+      ],
+      "id": "2073996b-96a5-4387-a9fb-624a16f80756",
+      "name": "Tasks",
+      "alwaysOutputData": false
+    },
+    {
+      "parameters": {
+        "inputSource": "passthrough"
+      },
+      "type": "n8n-nodes-base.executeWorkflowTrigger",
+      "typeVersion": 1.1,
+      "position": [
+        0,
+        0
+      ],
+      "id": "91f295c5-71c4-4bfb-a0b0-41272b8b296d",
+      "name": "When Executed by Another Workflow",
+      "alwaysOutputData": true
+    },
+    {
+      "parameters": {
+        "operation": "get",
+        "dataTableId": {
+          "__rl": true,
+          "value": "2wcvkQKO1PwXyKuf",
+          "mode": "list",
+          "cachedResultName": "Tasks list",
+          "cachedResultUrl": "/projects/Yur42J7o9t6t4b5B/datatables/2wcvkQKO1PwXyKuf"
+        },
+        "matchType": "allConditions",
+        "returnAll": true
+      },
+      "type": "n8n-nodes-base.dataTable",
+      "typeVersion": 1.1,
+      "position": [
+        208,
+        0
+      ],
+      "id": "ae08212c-0fe6-4577-9341-248341893d29",
+      "name": "Get all tasks",
+      "alwaysOutputData": true
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "When Executed by Another Workflow": {
+      "main": [
+        [
+          {
+            "node": "Get all tasks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Get all tasks": {
+      "main": [
+        [
+          {
+            "node": "Tasks",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "840b32bb-ce18-41b4-b848-381e81e71f79",
+  "meta": {
+    "instanceId": "81473fd982cc26566df7414990cc4a8d275b553de1512546ed1b7f8740645aa0"
+  },
+  "id": "0BI9Yr74vg7RiqNi",
+  "tags": []
+}
